@@ -1,0 +1,32 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+ipfshttpclient = "*"
+safe-pysha3 = "*"
+pika = "*"
+tpm2-pytss = "*"
+aiohttp = "*"
+aio_pika = "*"
+
+[dev-packages]
+pytest = "*"
+pytest-cov = "*"
+pytest-mock = "*"
+pytest-asyncio = "*"
+coverage = "*"
+mypy = "*"
+flake8 = "*"
+types-pika = "*"
+types-requests = "*"
+tox = "*"
+setuptools = "*"
+hypothesis = "*"
+
+[scripts]
+test = "pytest -v --cov=src --cov-report=xml"
+lint = "flake8 src tests"
+typecheck = "mypy src tests"
