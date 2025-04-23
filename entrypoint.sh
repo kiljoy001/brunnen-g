@@ -22,6 +22,7 @@ swtpm socket \
   --ctrl type=tcp,port=2322 \
   --server type=tcp,port=2321 \
   --flags not-need-init \
+  --log level=20,file=/tpmdata/swtpm.log \
   --tpm2 &
 
 # Wait for the simulator to start
@@ -101,7 +102,7 @@ else
     INSTALL_CMD="pipenv install Pipfile"
     PYTEST_CMD="true"  # No-op for production
 fi
-echo "📦 Installing dependencies..."
-eval $INSTALL_CMD
+# echo "📦 Installing dependencies..."
+# eval $INSTALL_CMD
 
 pipenv shell

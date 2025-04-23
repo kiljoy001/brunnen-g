@@ -39,6 +39,7 @@ COPY tpm2-abrmd.conf /etc/dbus-1/system.d/
 WORKDIR /tpm
 COPY tpm /tpm
 COPY Pipfile /tpm
+COPY Pipfile.lock /tpm
 COPY tests /tests
 
 # Set python path to root
@@ -48,6 +49,8 @@ ENV PYTHONPATH=/
 COPY yggdrasil-tpm-startup.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/yggdrasil-tpm-startup.sh
 
+# Install dependancies
+RUN pipenv install Pipfile --deploy --ignore-pipfile
 
 # Copy and modify the entrypoint script
 COPY entrypoint.sh /entrypoint.sh
