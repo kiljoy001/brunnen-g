@@ -1,4 +1,14 @@
 #!/bin/bash
+#
+# TPM-Secured Yggdrasil Launcher
+# 
+# This script provides enhanced security for Yggdrasil by:
+# - Storing private keys in TPM hardware
+# - Using in-memory configuration only
+# - Securely cleaning up sensitive data
+# - Using random TPM handles for unpredictability
+
+# Exit on error, unbound variable, and pipe failures
 set -euo pipefail
 trap 'echo "❌ Script failed at line $LINENO"; exit 1' ERR
 

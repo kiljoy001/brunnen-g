@@ -11,6 +11,8 @@ pika = "*"
 tpm2-pytss = "*"
 aiohttp = "*"
 aio_pika = "*"
+jsonrpcclient = "*"
+keyring = "*"
 
 [dev-packages]
 pytest = "*"
@@ -25,6 +27,7 @@ types-requests = "*"
 tox = "*"
 setuptools = "*"
 hypothesis = "*"
+responses = "*"
 
 [scripts]
 test = "pytest -v --cov=src --cov-report=xml"
