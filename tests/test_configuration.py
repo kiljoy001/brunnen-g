@@ -2,6 +2,7 @@ import contextlib
 import pytest
 import keyring
 from keyring.backend import KeyringBackend
+from keyring.errors import KeyringError, PasswordSetError
 from hypothesis import given, strategies as st
 from configuration.config_manager import ConfigManager
 
@@ -24,6 +25,18 @@ class MockKeyringBackend(KeyringBackend):
         else:
             raise keyring.errors.PasswordDeleteError("Password not found!")
 
+class ErrorRaisingKeyringBackend(KeyringBackend):
+    """A mock keyring that alwasy raises exceptions for testing error handling"""
+    
+    def set_password(self, service_name: str, username: str, password: str):
+        raise KeyringError("Simulated error in set password method")
+    
+    def get_password(self, service_name: str, username: str):
+        raise KeyringError("Simulated error in get_password")
+
+    def delete_password(self, service_name, username):
+        raise KeyringError("Simulated error in delete_password")
+
 @contextlib.contextmanager
 def mock_keyring_context():
     mock_backend = MockKeyringBackend()
@@ -33,6 +46,13 @@ def mock_keyring_context():
         yield mock_backend
     finally:
         keyring.set_keyring(original_backend)
+
+@st.composite
+def different_passwords(draw):
+    """Strategy to generate two different passwords"""
+    password1 = draw(st.text(min_size=1))
+    password2 = draw(st.text(min_size=1).filter(lambda p: p != password1))
+    return (password1, password2)
 
 @given(username=st.text(min_size=1), password=st.text(min_size=1))
 def test_config_save_load_credentials(username, password):
@@ -48,3 +68,33 @@ def test_config_save_load_credentials(username, password):
 
         # Assert
         assert result == mock_keyring.get_password(service_name, username)
+
+@given(username=st.text(min_size=1), password=st.text(min_size=1))
+def test_config_removes_password(username, password):
+    with mock_keyring_context() as mock_keyring:
+        # Arrange
+        config = ConfigManager()
+        config.save_emercoin_login(username, password)
+
+        # Act - remove passwords from both keyrings
+        config.remove_emercoin_password(username)
+        result = config.load_emercoin_login(username)
+
+        # Assert
+        assert result  is  None
+
+@given(username=st.text(min_size=1), passwords=different_passwords())
+def test_config_resets_new_password(username, passwords):
+    password, new_password = passwords
+    with mock_keyring_context() as mock_keyring:
+        # Arrange
+        config = ConfigManager()
+        config.save_emercoin_login(username, password)
+
+        # Act
+        config.reset_emercoin_login(username, new_password)
+        result = config.load_emercoin_login(username) 
+        
+        # Assert
+        assert result == new_password
+        assert result != password, "New password should be different from the original."
