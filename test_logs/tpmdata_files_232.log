@@ -1,7 +1,0 @@
-total 44
-drwxr-xr-x 2 root root  4096 Apr 21 23:39 .
-drwxr-xr-x 1 root root  4096 Apr 22 11:13 ..
--rw------- 1 root root    67 Apr 22 11:13 handles.json
--rw-r----- 1 root root     0 Apr 21 23:39 .lock
--rw------- 1 root root 22114 Apr 22 11:13 swtpm.log
--rw-r----- 1 root root  2115 Apr 21 23:39 tpm2-00.permall
