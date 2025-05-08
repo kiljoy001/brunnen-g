@@ -105,5 +105,6 @@ fi
 echo "📦 Installing dependencies..."
 eval $INSTALL_CMD
 
+pipenv update
 pipenv run $PYTEST_CMD
 # pipenv shell

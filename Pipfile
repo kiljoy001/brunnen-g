@@ -13,6 +13,8 @@ aiohttp = "*"
 aio_pika = "*"
 jsonrpcclient = "*"
 keyring = "*"
+mmh3 = "*"
+numpy = "*"
 
 [dev-packages]
 pytest = "*"

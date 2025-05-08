@@ -1,3 +1,8 @@
+import hashlib
+import mmh3
+import numpy as np
+from typing import Set, List
+
 class PasswordScreener():
     """
     Hybrid password screener that uses a hash table and bloom filter
@@ -9,6 +14,5 @@ class PasswordScreener():
     def __init__(self, common_password_file: str, rare_password_file: str = None):
          pass
 
-    def is_password_compromised(password):
+    def is_password_compromised(self, password):
         pass
-    

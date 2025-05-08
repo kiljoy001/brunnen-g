@@ -1,7 +1,8 @@
 import pytest
 import tempfile
+import string
 import os
-from hypothesis import given, strategies as st
+from hypothesis import given, settings, event, strategies as st
 from configuration.password_screener import PasswordScreener
 
 class TestPasswordScreener:
@@ -30,7 +31,7 @@ class TestPasswordScreener:
         return PasswordScreener(common_password_file, rare_password_file)
 
     @pytest.fixture(scope="module")
-    def full_password_screener():
+    def full_password_screener(self):
         """Create a password screener using the production lists"""
         config_dir = os.path.join(os.path.dirname(__file__), "..", "configuration")
         return PasswordScreener(
@@ -51,12 +52,12 @@ class TestPasswordScreener:
     def test_handles_case_senstivity(self, password_screener):
         assert password_screener.is_password_compromised("PASSWORD") != password_screener.is_password_compromised("password")
     
-    @settings(max_examples=1000, stateful_step_count=1000)
+    @settings(max_examples=1000)
     @given(random_password=st.text(alphabet=string.ascii_letters + string.digits + string.punctuation, min_size=15, max_size=50))
     def test_random_password_false_positive_rate(self, full_password_screener, random_password):
         """Test that bloom filter false postive rate is acceptable"""
         result = full_password_screener.is_password_compromised(random_password)
-        event("Password accepted" if not results else "Password rejected")
+        event("Password accepted" if not result else "Password rejected")
 
     def test_performance(self, password_screener):
         """Test that password screener is performant"""

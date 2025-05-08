@@ -38,12 +38,11 @@ class ErrorRaisingKeyringBackend(KeyringBackend):
         raise KeyringError("Simulated error in delete_password")
 
 @contextlib.contextmanager
-def mock_keyring_context():
-    mock_backend = MockKeyringBackend()
+def keyring_context(backend_instance: KeyringBackend):
     original_backend = keyring.get_keyring()
-    keyring.set_keyring(mock_backend)
+    keyring.set_keyring(backend_instance)
     try:
-        yield mock_backend
+        yield backend_instance
     finally:
         keyring.set_keyring(original_backend)
 
@@ -56,7 +55,7 @@ def different_passwords(draw):
 
 @given(username=st.text(min_size=1), password=st.text(min_size=1))
 def test_config_save_load_credentials(username, password):
-    with mock_keyring_context() as mock_keyring:
+    with keyring_context(MockKeyringBackend()) as mock_keyring:
         # Arrange
         config = ConfigManager()
         service_name = "emercoin"
@@ -71,7 +70,7 @@ def test_config_save_load_credentials(username, password):
 
 @given(username=st.text(min_size=1), password=st.text(min_size=1))
 def test_config_removes_password(username, password):
-    with mock_keyring_context() as mock_keyring:
+    with keyring_context(MockKeyringBackend()) as mock_keyring:
         # Arrange
         config = ConfigManager()
         config.save_emercoin_login(username, password)
@@ -86,7 +85,7 @@ def test_config_removes_password(username, password):
 @given(username=st.text(min_size=1), passwords=different_passwords())
 def test_config_resets_new_password(username, passwords):
     password, new_password = passwords
-    with mock_keyring_context() as mock_keyring:
+    with keyring_context(MockKeyringBackend()) as mock_keyring:
         # Arrange
         config = ConfigManager()
         config.save_emercoin_login(username, password)
@@ -98,3 +97,7 @@ def test_config_resets_new_password(username, passwords):
         # Assert
         assert result == new_password
         assert result != password, "New password should be different from the original."
+
+@given(username=st.text(min_size=1, max_size=50), password=st.text(min_size=1, max_size=50))
+def test_appropiate_errors_raised(self, username, password):
+    pass
