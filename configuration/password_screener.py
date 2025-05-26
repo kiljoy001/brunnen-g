@@ -3,6 +3,9 @@ import mmh3
 import numpy as np
 from typing import Set, List
 
+class BloomFilter():
+    """Creates a bloom filter for detecting breached passwords from a list"""
+    
 class PasswordScreener():
     """
     Hybrid password screener that uses a hash table and bloom filter

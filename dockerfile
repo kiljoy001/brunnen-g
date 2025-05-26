@@ -43,6 +43,7 @@ COPY Pipfile.lock /tpm
 COPY tests /tests
 COPY configuration /configuration
 COPY emercoin /emercoin
+COPY plugin /plugin
 
 # Set python path to root
 ENV PYTHONPATH=/

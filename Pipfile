@@ -15,6 +15,7 @@ jsonrpcclient = "*"
 keyring = "*"
 mmh3 = "*"
 numpy = "*"
+aiorwlock = "*"
 
 [dev-packages]
 pytest = "*"
